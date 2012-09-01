@@ -2,3 +2,5 @@ eclipse
 	.project
 	.settings
 	.classpath
+bin
+.metadata
