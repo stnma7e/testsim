@@ -28,18 +28,20 @@ public class Frame extends JPanel implements Runnable{
 		currentX = 100;
 	}
 	
-	public void paint(Graphics g) {
+	public void update(Graphics g) {
+		paint(g);
+	}
+	
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		final Graphics2D g2d = (Graphics2D)g;
 		g2d.setColor(Color.red);
-    	//g2d.drawLine(100, 100, 100, desty);
     	try {
 			Thread.sleep(50);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		desty++;
 		
 		Random generator = new Random();
 		
@@ -73,7 +75,8 @@ public class Frame extends JPanel implements Runnable{
 		currentY = newY;
 		
 		previousDirection = nextDirection;
-		
+
+		desty++;
 		repaint();
 		 
 	}
