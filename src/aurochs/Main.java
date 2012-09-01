@@ -27,6 +27,7 @@ public class Main {
 		simfactory = new SimFactory();
 		simcontrol = new SimControl();
 		System.out.println("Type a command or type ? for help.");
+		(new Thread(new Frame())).start();
 	}
 	
 	private static void mainloop() {
