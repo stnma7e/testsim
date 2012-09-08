@@ -38,8 +38,17 @@ public class SimControl {
 	public void stop() {
 		System.out.println("Enter simId.");
 		String simId = Main.consoleIn();
-		simobjlist.get(Long.parseLong(simId)).die();
-		simobjlist.remove(Long.parseLong(simId));
-		simlist.remove(Long.parseLong(simId));
+		boolean legalId = true;
+		try {
+			simobjlist.get(Long.parseLong(simId)).die();
+		}
+		catch (NullPointerException e) {
+			System.out.println("Invalid simId.");
+			legalId = false;
+		}
+		if (legalId == true) {
+			simobjlist.remove(Long.parseLong(simId));
+			simlist.remove(Long.parseLong(simId));
+		}
 	}
 }

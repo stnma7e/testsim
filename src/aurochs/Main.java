@@ -27,7 +27,7 @@ public class Main {
 		simfactory = new SimFactory();
 		simcontrol = new SimControl();
 		System.out.println("Type a command or type ? for help.");
-		(new Thread(new Frame())).start();
+		// (new Thread(new Frame())).start();
 	}
 	
 	private static void mainloop() {
@@ -40,6 +40,7 @@ public class Main {
 			simcontrol.stop();
 		}
 		else if (com.equals("?")) {
+			System.out.println("Possible commands:\n");
 			for (String i : Main.comlist) {
 				System.out.println("\t" + i);
 			}
