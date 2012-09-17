@@ -1,15 +1,12 @@
 package aurochs;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * @author Sam
- *
- */
-public class Main {
+public class Entry {
 	public static SimFactory simfactory;
-	public static SimControl simcontrol;
+	public static SimMaster simmaster;
 	public static String[] comlist = {
 			"Create",
 			"Stop",
@@ -22,37 +19,35 @@ public class Main {
 			mainloop();
 		}
 	}
-	
 	private static void startup() {
 		simfactory = new SimFactory();
-		simcontrol = new SimControl();
+		simmaster = new SimMaster();
 		System.out.println("Type a command or type ? for help.");
 		// (new Thread(new Frame())).start();
 	}
-	
 	private static void mainloop() {
 		String com = consoleIn().toLowerCase();
 		
-		if (com.equals("create")) {
-			simcontrol.create();
-		}
-		else if (com.equals("stop")) {
-			simcontrol.stop();
-		}
-		else if (com.equals("?")) {
-			System.out.println("Possible commands:\n");
-			for (String i : Main.comlist) {
-				System.out.println("\t" + i);
-			}
-		}
-		else if (com.equals("exit")) {
-			System.exit(0);
-		}
-		else {
-			System.out.println("Not a command.");
+		switch (com) {
+			case "create":
+				simmaster.create();
+				break;
+			case "stop":
+				simmaster.stop();
+				break;
+			case "?":
+				System.out.println("Possible commands:\n");
+				for (String i : Entry.comlist) {
+					System.out.println("\t" + i);
+				}
+				break;
+			case "exit":
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Not a command.");
 		}
 	}
-	
 	public static String consoleIn() {
 		try{
 		    BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));

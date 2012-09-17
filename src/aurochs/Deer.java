@@ -5,7 +5,7 @@ import java.util.Random;
  * @author Sam
  *
  */
-public class Deer implements ISim, Runnable {
+public class Deer implements ISim {
 	Random r = new Random();
 	private int xLoc = 100;
 	private int yLoc = 100;
@@ -28,6 +28,9 @@ public class Deer implements ISim, Runnable {
 	}
 	public int getyLoc() {
 		return this.yLoc;
+	}
+	public boolean getDeath() {
+		return this.toDie;
 	}
 	
 	public void move() {
@@ -59,18 +62,8 @@ public class Deer implements ISim, Runnable {
 		yLoc = newY;
 		 
 		previousDirection = nextDirection;
-	}
-	
-	public void run() {
-		while (toDie == false) {
-			move();
-			System.out.println(simType + " " + simId + ": " + getxLoc() + ", " + getyLoc());
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		
+		System.out.println(simType + " " + simId + ": " + getxLoc() + ", " + getyLoc());
 	}
 	
 	public void die() {

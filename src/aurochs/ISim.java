@@ -4,7 +4,7 @@ package aurochs;
  * @author Sam
  *
  */
-public interface ISim extends Runnable {
+public interface ISim {
 	int xLoc = 0;
 	int yLoc = 0;
 	long simId = 0;
