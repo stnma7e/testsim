@@ -31,7 +31,6 @@ public class SimFactory {
 		
 		ISimControl control;
 		ISim newsim;
-		++id;
 		try {
 			control = getSimControlList().get(type);
 			newsim = control.createSim(id, type);
@@ -45,6 +44,7 @@ public class SimFactory {
 					Thread newSimControl = new Thread(control);
 					// simControlThreadList.put(type, newSimControl);
 					newSimControl.start();
+					++id;
 					break;
 				default:
 					throw new IllegalArgumentException();

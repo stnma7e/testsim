@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 public class Entry {
 	public static SimFactory simfactory;
 	public static SimMaster simmaster;
+	public static Map simmap;
 	public static String[] comlist = {
 			"Create",
 			"Stop",
@@ -22,6 +23,7 @@ public class Entry {
 	private static void startup() {
 		simfactory = new SimFactory();
 		simmaster = new SimMaster();
+		simmap = new Map();
 		System.out.println("Type a command or type ? for help.");
 		// (new Thread(new Frame())).start();
 	}
@@ -40,6 +42,9 @@ public class Entry {
 				for (String i : Entry.comlist) {
 					System.out.println("\t" + i);
 				}
+				break;
+			case "locate":
+				simmaster.locate();
 				break;
 			case "exit":
 				System.exit(0);

@@ -1,10 +1,7 @@
 package aurochs;
+
 import java.util.Random;
 
-/**
- * @author Sam
- *
- */
 public class Deer implements ISim {
 	Random r = new Random();
 	private int xLoc = 100;
@@ -33,7 +30,7 @@ public class Deer implements ISim {
 		return this.toDie;
 	}
 	
-	public void move() {
+	public void getNewCoordinates(int x, int y) {
 		int randomIndex = r.nextInt(5);
 		// System.out.println(randomIndex);
 		int[] nextDirection = {0, 0};
@@ -56,12 +53,21 @@ public class Deer implements ISim {
 			 break;
 		}
 		
-		int newX = xLoc + nextDirection[0];
-		int newY = yLoc + nextDirection[0];
+		int newX = x + nextDirection[0];
+		int newY = y + nextDirection[0];
+		previousDirection = nextDirection;
+		
 		xLoc = newX;
 		yLoc = newY;
-		 
-		previousDirection = nextDirection;
+	}
+	
+	public void move() {
+		int[] xypos = { getxLoc(), getyLoc() };
+		
+		getNewCoordinates(xLoc, yLoc);
+		
+		int[] newXYpos = { getxLoc(), getyLoc() };
+		Map.getInstance().moveSim(xypos, newXYpos, this);
 		
 		System.out.println(simType + " " + simId + ": " + getxLoc() + ", " + getyLoc());
 	}

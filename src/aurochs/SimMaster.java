@@ -2,11 +2,8 @@ package aurochs;
 
 public class SimMaster {
 	
-	public SimMaster() {
-		
-	}
 	public void create() {
-		System.out.println("Which type?");
+		System.out.println("Enter type?");
 		for (String i : SimFactory.typeList) {
 			System.out.println("\t" + i);
 		}
@@ -39,6 +36,21 @@ public class SimMaster {
 		if (legalId == true) {
 			toDelete.die();
 			Entry.simfactory.getSimControlList().get(simType).ml_simlist.remove(simId);
+		}
+	}
+	public void locate() {
+		System.out.println("Enter id.");
+		String simId = Entry.consoleIn();
+		try {
+			int[] loc = Map.getInstance().locateSim(Long.parseLong(simId));
+			for (int i : loc) {
+				// System.out.println(i);
+			}
+			System.out.println(loc[0]);
+			System.out.println(loc[1]);
+		}
+		catch (IllegalArgumentException e) {
+			System.out.println("Invalid simType or simId.");
 		}
 	}
 }
