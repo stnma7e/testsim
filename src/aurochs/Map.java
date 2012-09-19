@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class Map {
-	private static Hashtable<int[], ArrayList<ISim>> locationOfSims = new Hashtable<int[], ArrayList<ISim>>();
-	private static Hashtable<ISim, int[]> simLocations = new Hashtable<ISim, int[]>();
-	private static Map instance = null;
+	private static Hashtable<int[], ArrayList<Sim>> locationOfSims = new Hashtable<int[], ArrayList<Sim>>();
+	private static Hashtable<Sim, int[]> simLocations = new Hashtable<Sim, int[]>();
+	private static Map instance;
 	
 	protected Map() {
 		
@@ -22,10 +22,9 @@ public class Map {
 		return instance;
 	}
 	
-	public Hashtable<int[], ArrayList<ISim>> getlocationOfSims() {
+	public Hashtable<int[], ArrayList<Sim>> getlocationOfSims() {
 		return Map.locationOfSims;
 	}
-	
 	boolean isLocationOpen(int[] xypos) {
 		if (locationOfSims.get(xypos) == null) {
 			return true;
@@ -34,14 +33,13 @@ public class Map {
 			return false;
 		}
 	}
-	
-	public ArrayList<ISim> getLocationPopulation(int[] xypos) {
+	public ArrayList<Sim> getLocationPopulation(int[] xypos) {
 		return locationOfSims.get(xypos);
 	}
 	
-	public void removeSim(int[] xypos, ISim newsim) {
+	public void removeSim(int[] xypos, Sim newsim) {
 		try {
-			ArrayList<ISim> curlist = locationOfSims.get(xypos);
+			ArrayList<Sim> curlist = locationOfSims.get(xypos);
 			curlist.remove(newsim);
 			if (getLocationPopulation(xypos) == null) {
 				locationOfSims.remove(xypos);
@@ -51,33 +49,33 @@ public class Map {
 			return;
 		}
 	}
-	public void killSim(int[] xypos, ISim newsim) {
+	public void killSim(int[] xypos, Sim newsim) {
 		removeSim(xypos, newsim);
 		simLocations.remove(newsim);
 	}
-	public void moveSim(int[] oldxypos, int[] newxypos, ISim newsim) {
+	public void moveSim(int[] oldxypos, int[] newxypos, Sim newsim) {
 		try {
 			removeSim(oldxypos, newsim);
-			ArrayList<ISim> curlist = locationOfSims.get(newxypos);
+			ArrayList<Sim> curlist = locationOfSims.get(newxypos);
 			curlist.add(newsim);
 		}
 		catch (NullPointerException e) {
-			ArrayList<ISim> newsimList = new ArrayList<ISim>();
+			ArrayList<Sim> newsimList = new ArrayList<Sim>();
 			newsimList.add(newsim);
 			
 			locationOfSims.put(newxypos, newsimList);
 		}
 		simLocations.put(newsim, newxypos);
 	}
-	public int[] locateSim(ISim simtofind) {
+	public int[] locateSim(Sim simtofind) {
 		return simLocations.get(simtofind);
 	}
 	public int[] locateSim(long id) throws IllegalArgumentException {
-		Set<ISim> simObj = simLocations.keySet();
-		Iterator<ISim> i = simObj.iterator();
+		Set<Sim> simObj = simLocations.keySet();
+		Iterator<Sim> i = simObj.iterator();
 		while (i.hasNext()) {
-			ISim element = i.next();
-			if (element.simId == id) {
+			Sim element = i.next();
+			if (element.getSimId() == id) {
 				int[] toBeReturned = { element.getxLoc(), element.getyLoc() };
 				return toBeReturned;
 			}

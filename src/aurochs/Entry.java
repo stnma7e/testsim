@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Entry {
-	public static SimFactory simfactory;
-	public static SimMaster simmaster;
-	public static Map simmap;
 	public static String[] comlist = {
 			"Create",
 			"Stop",
@@ -21,9 +18,6 @@ public class Entry {
 		}
 	}
 	private static void startup() {
-		simfactory = new SimFactory();
-		simmaster = new SimMaster();
-		simmap = new Map();
 		System.out.println("Type a command or type ? for help.");
 		// (new Thread(new Frame())).start();
 	}
@@ -32,10 +26,10 @@ public class Entry {
 		
 		switch (com) {
 			case "create":
-				simmaster.create();
+				SimMaster.getInstance().create();
 				break;
 			case "stop":
-				simmaster.stop();
+				SimMaster.getInstance().stop();
 				break;
 			case "?":
 				System.out.println("Possible commands:\n");
@@ -44,7 +38,7 @@ public class Entry {
 				}
 				break;
 			case "locate":
-				simmaster.locate();
+				SimMaster.getInstance().locate();
 				break;
 			case "exit":
 				System.exit(0);

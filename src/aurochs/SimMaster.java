@@ -1,6 +1,14 @@
 package aurochs;
 
 public class SimMaster {
+	private static SimMaster instance;
+	
+	public static SimMaster getInstance() {
+		if (instance == null) {
+			instance = new SimMaster();
+		}
+		return instance;
+	}
 	
 	public void create() {
 		System.out.println("Enter type?");
@@ -10,11 +18,11 @@ public class SimMaster {
 		String ans = Entry.consoleIn().toLowerCase();
 		
 		try {
-			Entry.simfactory.newSim(ans);
+			SimFactory.getInstance().newSim(ans);
 			// System.out.println(newsim.getsimId());
 		}
 		catch (IllegalArgumentException e) {
-			System.out.print("Illegal type.");
+			System.out.println("Illegal type.");
 			return;
 		}
 		
@@ -25,9 +33,9 @@ public class SimMaster {
 		boolean legalId = true;
 		System.out.println("Enter id.");
 		String simId = Entry.consoleIn();
-		ISim toDelete = null;
+		Sim toDelete = null;
 		try {
-			toDelete = Entry.simfactory.getSim(simType, Long.parseLong(simId));
+			toDelete = SimFactory.getInstance().getSim(simType, Long.parseLong(simId));
 		}
 		catch (IllegalArgumentException e) {
 			System.out.println("Invalid simType or simId.");
@@ -35,7 +43,7 @@ public class SimMaster {
 		}
 		if (legalId == true) {
 			toDelete.die();
-			Entry.simfactory.getSimControlList().get(simType).ml_simlist.remove(simId);
+			SimFactory.getInstance().getSimControlList().get(simType).getSimList().remove(simId);
 		}
 	}
 	public void locate() {
@@ -43,11 +51,7 @@ public class SimMaster {
 		String simId = Entry.consoleIn();
 		try {
 			int[] loc = Map.getInstance().locateSim(Long.parseLong(simId));
-			for (int i : loc) {
-				// System.out.println(i);
-			}
-			System.out.println(loc[0]);
-			System.out.println(loc[1]);
+			System.out.println(loc[0] + ", " + loc[1]);
 		}
 		catch (IllegalArgumentException e) {
 			System.out.println("Invalid simType or simId.");

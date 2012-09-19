@@ -4,8 +4,9 @@ import java.util.Hashtable;
 
 public class SimFactory {
 	private static long id;
-	private static Hashtable<String, ISimControl> simControlList;
+	private static Hashtable<String, SimControl> simControlList;
 	private static Hashtable<String, Thread> simControlThreadList;
+	private static SimFactory instance;
 	
 	public static String[] typeList = {
 		"deer",
@@ -14,10 +15,16 @@ public class SimFactory {
 	
 	public SimFactory() {
 		SimFactory.id = 0;
-		simControlList = new Hashtable<String, ISimControl>();
+		simControlList = new Hashtable<String, SimControl>();
 	}
 
-	public Hashtable<String, ISimControl> getSimControlList() {
+	public static SimFactory getInstance() {
+		if (instance == null) {
+			instance = new SimFactory();
+		}
+		return instance;
+	}
+	public Hashtable<String, SimControl> getSimControlList() {
 		return simControlList;
 	}
 	public Hashtable<String, Thread> getSimControlThreadList() {
@@ -27,10 +34,10 @@ public class SimFactory {
 	public long getId() {
 		return SimFactory.id;
 	}
-	public ISim newSim(String type) throws IllegalArgumentException {
+	public Sim newSim(String type) throws IllegalArgumentException {
 		
-		ISimControl control;
-		ISim newsim;
+		SimControl control;
+		Sim newsim;
 		try {
 			control = getSimControlList().get(type);
 			newsim = control.createSim(id, type);
@@ -38,7 +45,7 @@ public class SimFactory {
 		catch (NullPointerException e){
 			switch (type) {
 				case "deer":
-					control = new DeerControl();
+					control = new SimControl("deer");
 					getSimControlList().put(type, control);
 					newsim = control.createSim(id, type);
 					Thread newSimControl = new Thread(control);
@@ -57,12 +64,12 @@ public class SimFactory {
 		}
 		return newsim;
 	}
-	public ISim getSim(String type, long id) throws IllegalArgumentException {
-		ISim toBeReturned = null;
+	public Sim getSim(String type, long id) throws IllegalArgumentException {
+		Sim toBeReturned = null;
 		
 		if (type.equals("deer")) {
 			try {
-				toBeReturned = DeerControl.ml_simlist.get(id);
+				toBeReturned = simControlList.get("deer").getSimList().get(id);
 			}
 			catch (NullPointerException e){
 				throw new IllegalArgumentException();
