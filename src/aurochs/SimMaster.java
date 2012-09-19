@@ -2,7 +2,9 @@ package aurochs;
 
 public class SimMaster {
 	private static SimMaster instance;
-	
+	protected SimMaster() {
+		
+	}
 	public static SimMaster getInstance() {
 		if (instance == null) {
 			instance = new SimMaster();

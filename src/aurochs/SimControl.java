@@ -12,12 +12,11 @@ public class SimControl implements Runnable {
 	private String type;
 	int speed;
 	
-	public SimControl(String type) {
+	protected SimControl(String type) {
 		ml_simList = new Hashtable<Long, Sim>();
 		this.speed = ml_speedList.get(type);
 		this.type = type;
 	}
-	
 	public String getType() {
 		return type;
 	}

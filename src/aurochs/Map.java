@@ -4,26 +4,31 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 public class Map {
-	private static Hashtable<int[], ArrayList<Sim>> locationOfSims = new Hashtable<int[], ArrayList<Sim>>();
-	private static Hashtable<Sim, int[]> simLocations = new Hashtable<Sim, int[]>();
+	private Hashtable<int[], ArrayList<Sim>> locationOfSims;
+	private Hashtable<Sim, int[]> simLocations;
 	private static Map instance;
+	static Random r;
+	int[] previousDirection = {0, 0};
+	int mI_curX, mI_curY;
 	
 	protected Map() {
-		
+		simLocations = new Hashtable<Sim, int[]>();
+		locationOfSims = new Hashtable<int[], ArrayList<Sim>>();
+		mI_curX = 0;
+		mI_curY = 0;
 	}
-	
 	public static Map getInstance() {
 		if (instance == null) {
 			instance = new Map();
 		}
 		return instance;
 	}
-	
 	public Hashtable<int[], ArrayList<Sim>> getlocationOfSims() {
-		return Map.locationOfSims;
+		return locationOfSims;
 	}
 	boolean isLocationOpen(int[] xypos) {
 		if (locationOfSims.get(xypos) == null) {
@@ -53,7 +58,8 @@ public class Map {
 		removeSim(xypos, newsim);
 		simLocations.remove(newsim);
 	}
-	public void moveSim(int[] oldxypos, int[] newxypos, Sim newsim) {
+	public void moveSim(int[] oldxypos, Sim newsim) {
+		int[] newxypos = getNewCoordinates(oldxypos);
 		try {
 			removeSim(oldxypos, newsim);
 			ArrayList<Sim> curlist = locationOfSims.get(newxypos);
@@ -81,5 +87,36 @@ public class Map {
 			}
 		}
 		throw new IllegalArgumentException();
+	}
+	private int[] getNewCoordinates(int[] prevxy) {
+		r = new Random();
+		int randomIndex = r.nextInt(5);
+		// System.out.println(randomIndex);
+		int[] nextDirection = {0, 0};
+		
+		switch (randomIndex) {
+		case 0: case 1:
+			nextDirection = previousDirection;
+			break;
+		case 2:
+			 nextDirection[0] = 1;
+			 nextDirection[1] = 1;
+			 break;
+		 case 3:
+			 nextDirection[0] = 1;
+			 nextDirection[1] = -1;
+			 break;
+		 case 4:
+			 nextDirection[0] = -1;
+			 nextDirection[1] = 1;
+			 break;
+		}
+		
+		int newX = prevxy[0] + nextDirection[0];
+		int newY = prevxy[1] + nextDirection[0];
+		previousDirection = nextDirection;
+		int[] toBeReturned = { newX, newY };
+		
+		return toBeReturned;
 	}
 }

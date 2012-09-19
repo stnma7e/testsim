@@ -13,11 +13,10 @@ public class SimFactory {
 		"squirrel"
 	};
 	
-	public SimFactory() {
+	protected SimFactory() {
 		SimFactory.id = 0;
 		simControlList = new Hashtable<String, SimControl>();
 	}
-
 	public static SimFactory getInstance() {
 		if (instance == null) {
 			instance = new SimFactory();
@@ -30,10 +29,10 @@ public class SimFactory {
 	public Hashtable<String, Thread> getSimControlThreadList() {
 		return simControlThreadList;
 	}
-	
 	public long getId() {
 		return SimFactory.id;
 	}
+	
 	public Sim newSim(String type) throws IllegalArgumentException {
 		
 		SimControl control;
