@@ -63,24 +63,20 @@ public class SimMaster {
 		System.out.println("Enter type.");
 		String type = Entry.consoleIn();
 		try {
-			if (!SimFactory.getInstance().getSimControlThreadList().get(type).isAlive()) {
-				SimFactory.getInstance().getSimControlThreadList().get(type).start();
-			}
-			else {
-				SimFactory.getInstance().getSimControlThreadList().get(type).notify();
-			}
+			SimFactory.getInstance().getSimControl(type).startGoing();
 		}
-		catch (NullPointerException e) {
+		catch (IllegalArgumentException e) {
 			System.err.println("Invalid type.");
 		}
 	}
 	public void stopControl() {
 		System.out.println("Enter type.");
 		String type = Entry.consoleIn();
+		
 		try {
-			SimFactory.getInstance().getSimControlThreadList().get(type).wait();
+			SimFactory.getInstance().getSimControl(type).stop();
 		}
-		catch (NullPointerException|InterruptedException e) {
+		catch (IllegalArgumentException e) {
 			System.err.println("Invalid type.");
 		}
 	}

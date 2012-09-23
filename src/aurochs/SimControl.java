@@ -14,17 +14,25 @@ public class SimControl implements Runnable {
 	int speed;
 	static Random r;
 	int[] previousDirection = {0, 0};
+	boolean dontStop = true;
 	
 	protected SimControl(String type) {
 		ml_simList = new Hashtable<Long, Sim>();
 		this.speed = ml_speedList.get(type);
 		this.type = type;
+		// dontStop = false;
 	}
 	public String getType() {
 		return type;
 	}
 	public Hashtable<Long, Sim> getSimList() {
 		return ml_simList;
+	}
+	public void stop() {
+		dontStop = false;
+	}
+	public void startGoing() {
+		dontStop = true;
 	}
 	
 	public Sim createSim(long id, String type) {
@@ -57,7 +65,7 @@ public class SimControl implements Runnable {
 		}
 		
 		int newX = prevxy[0] + nextDirection[0];
-		int newY = prevxy[1] + nextDirection[0];
+		int newY = prevxy[1] + nextDirection[1];
 		previousDirection = nextDirection;
 		int[] toBeReturned = { newX, newY };
 		
@@ -65,17 +73,19 @@ public class SimControl implements Runnable {
 	}
 	public void run() {
 		while(true) {
-			Enumeration<Sim> e = ml_simList.elements();
-			while(e.hasMoreElements()) {
-				Sim curDeer = (Sim) e.nextElement();
-				if (!curDeer.getDeath()) {
-					((Sim) curDeer).move();
+			if(dontStop == true) {
+				Enumeration<Sim> e = ml_simList.elements();
+				while(e.hasMoreElements()) {
+					Sim curDeer = (Sim) e.nextElement();
+					if (!curDeer.getDeath()) {
+						((Sim) curDeer).move();
+					}
 				}
-			}
-			try {
-				Thread.sleep(speed);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
+				try {
+					Thread.sleep(speed);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	}

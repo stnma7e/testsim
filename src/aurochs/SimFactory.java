@@ -52,6 +52,8 @@ public class SimFactory {
 					/* create simControl thread for later starting/stopping */
 					
 					Thread newSimControl = new Thread(control);
+					newSimControl.start();
+					
 					simControlThreadList.put(type, newSimControl);
 				}
 			}
@@ -73,5 +75,23 @@ public class SimFactory {
 		}
 		
 		return toBeReturned;
+	}
+	public SimControl getSimControl(String type) throws IllegalArgumentException {
+		SimControl toReturn = simControlList.get(type);
+		if (toReturn != null) {
+			return toReturn;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+	}
+	public Thread getSimControlThread(String type) throws IllegalArgumentException {
+		Thread toReturn = simControlThreadList.get(type);
+		if (toReturn != null) {
+			return toReturn;
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 }
