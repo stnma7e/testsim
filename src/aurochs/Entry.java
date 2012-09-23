@@ -28,7 +28,7 @@ public class Entry {
 			case "create":
 				SimMaster.getInstance().create();
 				break;
-			case "stop":
+			case "kill":
 				SimMaster.getInstance().stop();
 				break;
 			case "?":
@@ -40,11 +40,17 @@ public class Entry {
 			case "locate":
 				SimMaster.getInstance().locate();
 				break;
+			case "start":
+				SimMaster.getInstance().startControl();
+				break;
+			case "stop":
+				SimMaster.getInstance().stopControl();
+				break;
 			case "exit":
 				System.exit(0);
 				break;
 			default:
-				System.out.println("Not a command.");
+				System.err.println("Not a command.");
 		}
 	}
 	public static String consoleIn() {
@@ -59,6 +65,6 @@ public class Entry {
 			e.printStackTrace();
 		}
 		return null;
+		
 	}
-
 }

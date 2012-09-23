@@ -3,9 +3,9 @@ package aurochs;
 import java.util.Hashtable;
 
 public class SimFactory {
-	private static long id;
-	private static Hashtable<String, SimControl> simControlList;
-	private static Hashtable<String, Thread> simControlThreadList;
+	private long id;
+	private Hashtable<String, SimControl> simControlList;
+	private Hashtable<String, Thread> simControlThreadList;
 	private static SimFactory instance;
 	
 	public static String[] typeList = {
@@ -14,8 +14,9 @@ public class SimFactory {
 	};
 	
 	protected SimFactory() {
-		SimFactory.id = 0;
+		id = 0;
 		simControlList = new Hashtable<String, SimControl>();
+		simControlThreadList = new Hashtable<String, Thread>();
 	}
 	public static SimFactory getInstance() {
 		if (instance == null) {
@@ -30,54 +31,44 @@ public class SimFactory {
 		return simControlThreadList;
 	}
 	public long getId() {
-		return SimFactory.id;
+		return this.id;
 	}
 	
 	public Sim newSim(String type) throws IllegalArgumentException {
 		
 		SimControl control;
-		Sim newsim;
+		Sim newsim = null;
 		try {
-			control = getSimControlList().get(type);
+			control = simControlList.get(type);
 			newsim = control.createSim(id, type);
 		}
-		catch (NullPointerException e){
-			switch (type) {
-				case "deer":
-					control = new SimControl("deer");
-					getSimControlList().put(type, control);
+		catch (NullPointerException e) {
+			for (String i : typeList) {
+				if (type.equals(i)) {
+					control = new SimControl(type);
+					simControlList.put(type, control);
 					newsim = control.createSim(id, type);
+					
+					/* create simControl thread for later starting/stopping */
+					
 					Thread newSimControl = new Thread(control);
-					// simControlThreadList.put(type, newSimControl);
-					newSimControl.start();
-					++id;
-					break;
-				default:
-					throw new IllegalArgumentException();
+					simControlThreadList.put(type, newSimControl);
+				}
 			}
-			/*
-			Thread newSimControl = new Thread(fact);
-			newSimControl.start();
-			*/
-			// this.simControlThreadList.put(type, newSimControl);
 		}
-		return newsim;
+		++id;
+		
+		if (newsim != null) {
+			return newsim;
+		}
+		throw new IllegalArgumentException();
 	}
 	public Sim getSim(String type, long id) throws IllegalArgumentException {
 		Sim toBeReturned = null;
-		
-		if (type.equals("deer")) {
-			try {
-				toBeReturned = simControlList.get("deer").getSimList().get(id);
-			}
-			catch (NullPointerException e){
-				throw new IllegalArgumentException();
-			}
+		try {
+			toBeReturned = simControlList.get(type).getSimList().get(id);
 		}
-		else if (type.equals("squirrel")) {
-			// toBeReturned = new Squirrel(++id, type);
-		}
-		else {
+		catch (NullPointerException e){
 			throw new IllegalArgumentException();
 		}
 		

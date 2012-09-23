@@ -20,11 +20,11 @@ public class SimMaster {
 		String ans = Entry.consoleIn().toLowerCase();
 		
 		try {
-			SimFactory.getInstance().newSim(ans);
-			// System.out.println(newsim.getsimId());
+			Sim newsim = SimFactory.getInstance().newSim(ans);
+			System.out.println(newsim.getSimId());
 		}
 		catch (IllegalArgumentException e) {
-			System.out.println("Illegal type.");
+			System.err.println("Illegal type.");
 			return;
 		}
 		
@@ -40,7 +40,7 @@ public class SimMaster {
 			toDelete = SimFactory.getInstance().getSim(simType, Long.parseLong(simId));
 		}
 		catch (IllegalArgumentException e) {
-			System.out.println("Invalid simType or simId.");
+			System.err.println("Invalid simType or simId.");
 			legalId = false;
 		}
 		if (legalId == true) {
@@ -56,7 +56,32 @@ public class SimMaster {
 			System.out.println(loc[0] + ", " + loc[1]);
 		}
 		catch (IllegalArgumentException e) {
-			System.out.println("Invalid simType or simId.");
+			System.err.println("Invalid simType or simId.");
+		}
+	}
+	public void startControl() {
+		System.out.println("Enter type.");
+		String type = Entry.consoleIn();
+		try {
+			if (!SimFactory.getInstance().getSimControlThreadList().get(type).isAlive()) {
+				SimFactory.getInstance().getSimControlThreadList().get(type).start();
+			}
+			else {
+				SimFactory.getInstance().getSimControlThreadList().get(type).notify();
+			}
+		}
+		catch (NullPointerException e) {
+			System.err.println("Invalid type.");
+		}
+	}
+	public void stopControl() {
+		System.out.println("Enter type.");
+		String type = Entry.consoleIn();
+		try {
+			SimFactory.getInstance().getSimControlThreadList().get(type).wait();
+		}
+		catch (NullPointerException|InterruptedException e) {
+			System.err.println("Invalid type.");
 		}
 	}
 }

@@ -1,19 +1,20 @@
 package aurochs;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+
 public class Map {
 	private Hashtable<int[], ArrayList<Sim>> locationOfSims;
 	private Hashtable<Sim, int[]> simLocations;
 	private static Map instance;
-	static Random r;
-	int[] previousDirection = {0, 0};
 	int mI_curX, mI_curY;
+	private  JedisPool jedispool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
 	
 	protected Map() {
 		simLocations = new Hashtable<Sim, int[]>();
@@ -31,22 +32,38 @@ public class Map {
 		return locationOfSims;
 	}
 	boolean isLocationOpen(int[] xypos) {
-		if (locationOfSims.get(xypos) == null) {
+		if (getLocation(xypos) == null) {
 			return true;
 		}
 		else {
 			return false;
 		}
 	}
-	public ArrayList<Sim> getLocationPopulation(int[] xypos) {
+	public ArrayList<Sim> getLocation(int[] xypos) {
 		return locationOfSims.get(xypos);
 	}
+	public JedisPool getJedisPool() {
+		return jedispool;
+	}
 	
+	public void removeSim(Sim newsim) {
+		try {
+			int[] xypos = locateSim(newsim);
+			ArrayList<Sim> curlist = locationOfSims.get(xypos);
+			curlist.remove(newsim);
+			if (getLocation(xypos) == null) {
+				locationOfSims.remove(xypos);
+			}
+		}
+		catch (NullPointerException e) {
+			return;
+		}
+	}
 	public void removeSim(int[] xypos, Sim newsim) {
 		try {
 			ArrayList<Sim> curlist = locationOfSims.get(xypos);
 			curlist.remove(newsim);
-			if (getLocationPopulation(xypos) == null) {
+			if (getLocation(xypos) == null) {
 				locationOfSims.remove(xypos);
 			}
 		}
@@ -55,22 +72,24 @@ public class Map {
 		}
 	}
 	public void killSim(int[] xypos, Sim newsim) {
-		removeSim(xypos, newsim);
+		removeSim(newsim);
 		simLocations.remove(newsim);
 	}
 	public void moveSim(int[] oldxypos, Sim newsim) {
-		int[] newxypos = getNewCoordinates(oldxypos);
+		int[] newxypos =  null; //getNewCoordinates(oldxypos);
+		removeSim(oldxypos, newsim);
+		// if no old Sim is present, continue
+		
+		ArrayList<Sim> newsimList;
 		try {
-			removeSim(oldxypos, newsim);
-			ArrayList<Sim> curlist = locationOfSims.get(newxypos);
-			curlist.add(newsim);
+			newsimList = locationOfSims.get(newxypos);
+			newsimList.add(newsim);
 		}
 		catch (NullPointerException e) {
-			ArrayList<Sim> newsimList = new ArrayList<Sim>();
+			newsimList = new ArrayList<Sim>();
 			newsimList.add(newsim);
-			
-			locationOfSims.put(newxypos, newsimList);
 		}
+		locationOfSims.put(newxypos, newsimList);
 		simLocations.put(newsim, newxypos);
 	}
 	public int[] locateSim(Sim simtofind) {
@@ -87,36 +106,5 @@ public class Map {
 			}
 		}
 		throw new IllegalArgumentException();
-	}
-	private int[] getNewCoordinates(int[] prevxy) {
-		r = new Random();
-		int randomIndex = r.nextInt(5);
-		// System.out.println(randomIndex);
-		int[] nextDirection = {0, 0};
-		
-		switch (randomIndex) {
-		case 0: case 1:
-			nextDirection = previousDirection;
-			break;
-		case 2:
-			 nextDirection[0] = 1;
-			 nextDirection[1] = 1;
-			 break;
-		 case 3:
-			 nextDirection[0] = 1;
-			 nextDirection[1] = -1;
-			 break;
-		 case 4:
-			 nextDirection[0] = -1;
-			 nextDirection[1] = 1;
-			 break;
-		}
-		
-		int newX = prevxy[0] + nextDirection[0];
-		int newY = prevxy[1] + nextDirection[0];
-		previousDirection = nextDirection;
-		int[] toBeReturned = { newX, newY };
-		
-		return toBeReturned;
 	}
 }
