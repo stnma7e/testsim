@@ -1,11 +1,14 @@
 #eclipse
 	eclipse
 	.project
-	.settings/
+	.settings
 	.classpath
 	.metadata
-
-bin
-
+	
 #Dolphin
 	.directory
+	
+/ext
+.*
+bin
+

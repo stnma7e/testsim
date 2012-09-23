@@ -4,9 +4,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-
 public class SimControl implements Runnable {
 	static final Hashtable<String, Integer> ml_speedList = new Hashtable<String, Integer>() {{
 		put("deer", 1000);

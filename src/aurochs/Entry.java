@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 public class Entry {
 	public static String[] comlist = {
 			"Create",
+			"Kill",
+			"Locate",
+			"Start",
 			"Stop",
 			"Exit"
 	};
