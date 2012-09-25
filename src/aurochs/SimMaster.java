@@ -21,7 +21,6 @@ public class SimMaster {
 		
 		try {
 			Sim newsim = SimFactory.getInstance().newSim(ans);
-			System.out.println(newsim.getSimId());
 		}
 		catch (IllegalArgumentException e) {
 			System.err.println("Illegal type.");

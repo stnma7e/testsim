@@ -67,7 +67,7 @@ public class SimControl implements Runnable {
 		int newX = prevxy[0] + nextDirection[0];
 		int newY = prevxy[1] + nextDirection[1];
 		previousDirection = nextDirection;
-		int[] toBeReturned = { newX, newY };
+		int[] toBeReturned = { newX, newY, prevxy[2] };
 		
 		return toBeReturned;
 	}
